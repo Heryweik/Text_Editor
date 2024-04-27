@@ -1,5 +1,6 @@
 import DashboardNav from "@/components/DashboardNav";
 import prisma from "@/lib/db";
+import { stripe } from "@/lib/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -38,6 +39,24 @@ async function getData({
         name,
       },
     });
+  }
+
+  // Creamos el stripeCustomerId con el archivo de stripe y lo guardamos en la base de datos
+  // If the user does not have a stripeCustomerId, create a new customer in Stripe
+  // Esto se puede verificar en la web de stripe en el apartado de customers/clientes
+  if (!user?.stripeCustomerId) {
+    const data = await stripe.customers.create({
+      email,
+    })
+
+    await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        stripeCustomerId: data.id,
+      }
+    })
   }
 }
 

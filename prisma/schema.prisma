@@ -15,9 +15,27 @@ datasource db {
 }
 
 model User {
-  id        String   @id @unique
-  name      String?
-  email     String   @unique
-  stripeCustomerId String? @unique
-  colorScheme String? @default("theme-violet")
+  id               String         @id @unique
+  name             String?
+  email            String         @unique
+  stripeCustomerId String?        @unique
+  colorScheme      String         @default("theme-violet")
+  // Relacion uno a uno, un usuario tiene una subscripcion, una subscripcion pertenece a un usuario
+  // Tiene un signo de pregunta porque es una relacion uno a uno, por defecto da un array pero eso seria si fueran muchas subscripciones
+  Subscription     Subscription?
+}
+
+model Subscription {
+  stripeSubscriptionId String   @id @unique
+  interval             String
+  status               String
+  planId               String
+  currentPeriodStart   Int
+  currentPeriodEnd     Int
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  // Relacion uno a uno
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique
 }

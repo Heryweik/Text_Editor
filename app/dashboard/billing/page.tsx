@@ -4,7 +4,7 @@ import prisma from "@/lib/db";
 import { CheckCircle2 } from "lucide-react";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { getStripeSession } from "@/lib/stripe";
+import { getStripeSession, stripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import { StripePortal, StripeSubscriptionCreationButton } from "@/components/SubmitButtons";
 
@@ -82,6 +82,20 @@ export default async function BillingPage() {
     return redirect(subscriptionUrl)
   }
 
+  // server action
+  // Esta función es para crear el portal del cliente, en este caso se esta obteniendo el customerId del usuario
+  async function createCustomerPortal() {
+    'use server'
+
+    const session = await stripe.billingPortal.sessions.create({
+      customer: data?.user.stripeCustomerId as string,
+      return_url: 'http://localhost:3000/dashboard',
+    })
+
+    return redirect(session.url)
+  }
+
+  // Si el status de la subscripción es active se renderiza el formulario de edición de la subscripción
   if (data?.status === 'active') {
     return (
     <div className="grid items-start gap-8">
@@ -98,7 +112,7 @@ export default async function BillingPage() {
         <CardDescription>Click on the button below, this will give you the opportunity to change your payment details and view your statement at the same time.</CardDescription>
       </CardHeader>
       <CardContent>
-        <form action="">
+        <form action={createCustomerPortal}>
           <StripePortal />
         </form>
       </CardContent>

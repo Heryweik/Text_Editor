@@ -102,9 +102,23 @@ export default async function DashboardPage() {
             </Button>
           </>
         ) : (
-          <Button asChild>
-            <Link href="/dashboard/billing">Create a new Note</Link>
-          </Button>
+          <>
+            <Button asChild className="hidden md:block">
+              <Link href="/dashboard/billing">
+                <span>Create a new Note</span>
+              </Link>
+            </Button>
+
+            <Button
+              size={"icon"}
+              className=" md:hidden py-2 px-3 flex items-center justify-center w-fit"
+              asChild
+            >
+              <Link href="/dashboard/billing">
+                <Plus className="w-5 h-5" />
+              </Link>
+            </Button>
+          </>
         )}
       </div>
 

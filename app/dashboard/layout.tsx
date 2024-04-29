@@ -4,6 +4,8 @@ import { stripe } from "@/lib/stripe";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
+import { unstable_noStore as noStore } from "next/cache";
+
 // getData function to get user data from the session and save it to the database
 async function getData({
   email,
@@ -18,6 +20,10 @@ async function getData({
   lastName: string | undefined | null;
   profileImage: string | undefined | null;
 }) {
+
+  // noStore() prevents the function from being cached, as it needs to be executed on the server
+  noStore();
+
   // Find the user in the database
   const user = await prisma.user.findUnique({
     where: {

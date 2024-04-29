@@ -21,9 +21,13 @@ import {
 } from "@/components/ui/select";
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
 async function getData(userId: string) {
+
+  // Sirve para que no se cachee la función, esto ya que se necesita que se ejecute en el servidor
+  noStore();
+
   const data = await prisma.user.findUnique({
     where: {
       id: userId,

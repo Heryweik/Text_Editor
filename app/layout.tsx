@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navbar from "@/components/Navbar";
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { unstable_noStore as noStore } from "next/cache";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,6 +15,9 @@ export const metadata: Metadata = {
 };
 
 async function getData(userId: string) {
+
+  noStore();
+
   // Esta condición es porque en un principio no hay un usuario logueado, por lo tanto no se podra asignar un colorScheme, por ello hay que hacer la validación y dejar un valor por defecto
   if (userId) {
     const data = await prisma.user.findUnique({

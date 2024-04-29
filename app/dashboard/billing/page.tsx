@@ -7,6 +7,7 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { getStripeSession, stripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import { StripePortal, StripeSubscriptionCreationButton } from "@/components/SubmitButtons";
+import { unstable_noStore as noStore } from "next/cache";
 
 const featuresItems = [
   {
@@ -30,6 +31,10 @@ const featuresItems = [
 // Esta función getData es para obtener la información del usuario, en este caso se esta obteniendo el status de la subscripción y el stripeCustomerId
 // Esta informacion se usa para renderizar una u otra cosa dependiendo del estado de la subscripción
 async function getData(userId: string) {
+
+  // Sirve para que no se cachee la función, esto ya que se necesita que se ejecute en el servidor
+  noStore();
+
   const data = await prisma.subscription.findUnique({
     where: {
       userId,

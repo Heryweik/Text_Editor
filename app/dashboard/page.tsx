@@ -2,14 +2,13 @@ import { Button } from "@/components/ui/button";
 import prisma from "@/lib/db";
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Edit, File, Trash } from "lucide-react";
+import { Edit, File, Plus, Trash } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { TrashDelete } from "@/components/SubmitButtons";
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
 // Esta funcion es para obtener todas las notas del usuario
 async function getData(userId: string) {
-
   // Sirve para que no se cachee la función, esto ya que se necesita que se ejecute en el servidor
   noStore();
 
@@ -76,18 +75,32 @@ export default async function DashboardPage() {
 
   return (
     <div className="grid items-start gap-y-8">
-      <div className="flex items-center justify-between px-2">
+      <div className="flex items-center justify-between gap-2">
         <div className="grid gap-1">
-          <h1 className="text-3xl md:text-4xl font-bold">Yout Notes</h1>
+          <h1 className="text-3xl md:text-4xl font-bold">Your Notes</h1>
           <p className="text-lg text-muted-foreground">
             Here you can see and create new notes
           </p>
         </div>
 
         {data?.Subscription?.status === "active" ? (
-          <Button asChild>
-            <Link href="/dashboard/new">Create a new Note</Link>
-          </Button>
+          <>
+            <Button asChild className="hidden md:block">
+              <Link href="/dashboard/new">
+                <span>Create a new Note</span>
+              </Link>
+            </Button>
+
+            <Button
+              size={"icon"}
+              className=" md:hidden py-2 px-3 flex items-center justify-center w-fit"
+              asChild
+            >
+              <Link href="/dashboard/new">
+                <Plus className="w-5 h-5" />
+              </Link>
+            </Button>
+          </>
         ) : (
           <Button asChild>
             <Link href="/dashboard/billing">Create a new Note</Link>

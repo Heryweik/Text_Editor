@@ -15,6 +15,8 @@ import {
 import Link from "next/link";
 
 import { LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
+import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 export const navItems = [
   {
@@ -47,6 +49,8 @@ export default function UserNav({
   // Obtenemos la primera letra del nombre para mostrarla en el avatar si no hay imagen o no la ha cargado
   const fisrtLetter = name.charAt(0).toUpperCase();
 
+  const pathname = usePathname()
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -68,12 +72,16 @@ export default function UserNav({
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuGroup>
+        <DropdownMenuGroup  className='grid items-start gap-2'>
           {navItems.map((item, index) => (
             <DropdownMenuItem asChild key={index}>
               <Link
-                href={item}
-                className="w-full flex justify-between items-center"
+                href={item.href}
+                className={cn(
+                  "group w-full flex flex-row justify-between items-center rounded-md px-3 py-2 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
+                  // los && son para aplicar una clase si se cumple la condición
+                  pathname === item.href && "bg-accent text-accent-foreground"
+              )}
               >
                 {item.name}
                 <span>

@@ -15,14 +15,14 @@ export default async function Navbar() {
 
   return (
     <nav className="border-b bg-background h-[10vh] flex items-center">
-      <div className="container flex items-center justify-between">
+      <div className="container flex items-center justify-between gap-x-2">
         <Link href="/">
-          <h1 className="font-bold text-3xl">
+          <h1 className="font-bold text-2xl md:text-3xl">
             Text<span className="text-primary">Editor</span>
           </h1>
         </Link>
 
-        <div className="flex items-center gap-x-5">
+        <div className="flex items-center gap-x-2 md:gap-x-5">
           <ThemeToggle />
 
           {(await isAuthenticated()) ? (
@@ -32,7 +32,7 @@ export default async function Navbar() {
               image={user?.picture as string}
             />
           ) : (
-            <div className="flex items-center gap-x-5">
+            <div className="flex items-center gap-x-2 md:gap-x-5">
               <LoginLink>
                 <Button>Sign In</Button>
               </LoginLink>

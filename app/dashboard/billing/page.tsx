@@ -1,12 +1,21 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import prisma from "@/lib/db";
 import { CheckCircle2 } from "lucide-react";
 
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { getStripeSession, stripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
-import { StripePortal, StripeSubscriptionCreationButton } from "@/components/SubmitButtons";
+import {
+  StripePortal,
+  StripeSubscriptionCreationButton,
+} from "@/components/SubmitButtons";
 import { unstable_noStore as noStore } from "next/cache";
 
 const featuresItems = [
@@ -31,7 +40,6 @@ const featuresItems = [
 // Esta función getData es para obtener la información del usuario, en este caso se esta obteniendo el status de la subscripción y el stripeCustomerId
 // Esta informacion se usa para renderizar una u otra cosa dependiendo del estado de la subscripción
 async function getData(userId: string) {
-
   // Sirve para que no se cachee la función, esto ya que se necesita que se ejecute en el servidor
   noStore();
 
@@ -62,7 +70,7 @@ export default async function BillingPage() {
   // server action
   // Esta función es para crear la subscripción, en este caso se esta obteniendo el customerId del usuario y el priceId de la subscripción
   async function createSubscription() {
-    'use server'
+    "use server";
 
     // Se obtiene el stripeCustomerId del usuario
     const dbUser = await prisma.user.findUnique({
@@ -72,58 +80,71 @@ export default async function BillingPage() {
       select: {
         stripeCustomerId: true,
       },
-    })
+    });
 
     if (!dbUser?.stripeCustomerId) {
-      throw new Error('Unable to get customer id')
+      throw new Error("Unable to get customer id");
     }
 
     const subscriptionUrl = await getStripeSession({
       customerId: dbUser.stripeCustomerId,
-      domainUrl: 'http://localhost:3000',
+      // Se obtiene el dominio de la aplicación dependiendo del entorno
+      domainUrl:
+        process.env.NODE_ENV == "production"
+          ? (process.env.PRODUCTION_URL as string)
+          : "http://localhost:3000",
       priceId: process.env.STRIPE_PRICE_ID!,
-    })
+    });
 
-    return redirect(subscriptionUrl)
+    return redirect(subscriptionUrl);
   }
 
   // server action
   // Esta función es para crear el portal del cliente, en este caso se esta obteniendo el customerId del usuario
   async function createCustomerPortal() {
-    'use server'
+    "use server";
 
     const session = await stripe.billingPortal.sessions.create({
       customer: data?.user.stripeCustomerId as string,
-      return_url: 'http://localhost:3000/dashboard',
-    })
+      return_url:
+        process.env.NODE_ENV == "production"
+          ? (process.env.PRODUCTION_URL as string)
+          : "http://localhost:3000/dashboard",
+    });
 
-    return redirect(session.url)
+    return redirect(session.url);
   }
 
   // Si el status de la subscripción es active se renderiza el formulario de edición de la subscripción
-  if (data?.status === 'active') {
+  if (data?.status === "active") {
     return (
-    <div className="grid items-start gap-8">
-      <div className="flex items-center justify-between px-2">
-        <div className="grid gap-1">
-          <h1 className="text-3xl md:text-4xl font-bold">Subscription</h1>
-          <p className="text-lg text-muted-foreground">Settings readgding your subscription</p>
+      <div className="grid items-start gap-8">
+        <div className="flex items-center justify-between px-2">
+          <div className="grid gap-1">
+            <h1 className="text-3xl md:text-4xl font-bold">Subscription</h1>
+            <p className="text-lg text-muted-foreground">
+              Settings readgding your subscription
+            </p>
+          </div>
         </div>
+
+        <Card className="w-full lg:w-2/3">
+          <CardHeader>
+            <CardTitle>Edit Subscription</CardTitle>
+            <CardDescription>
+              Click on the button below, this will give you the opportunity to
+              change your payment details and view your statement at the same
+              time.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <form action={createCustomerPortal}>
+              <StripePortal />
+            </form>
+          </CardContent>
+        </Card>
       </div>
-      
-    <Card className="w-full lg:w-2/3">
-      <CardHeader>
-        <CardTitle>Edit Subscription</CardTitle>
-        <CardDescription>Click on the button below, this will give you the opportunity to change your payment details and view your statement at the same time.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form action={createCustomerPortal}>
-          <StripePortal />
-        </form>
-      </CardContent>
-    </Card>
-    </div>
-    )
+    );
   }
 
   return (

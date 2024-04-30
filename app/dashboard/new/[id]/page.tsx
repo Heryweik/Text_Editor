@@ -1,3 +1,5 @@
+"use client";
+
 import SubmitButtons from "@/components/SubmitButtons";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,63 +19,64 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
+import NotePicker from "@/components/tiptap/NotePicker";
+import { Suspense, use, useEffect, useState } from "react";
+import { postDataHandler } from "@/action/CreateNote";
+import { getDataHandler } from "@/action/GetNote";
+import { updateDatahandler } from "@/action/UpdateNote";
+import { Loader2 } from "lucide-react";
 
-async function getData({ noteId, userId }: { noteId: string; userId: string }) {
+export default function DynamicNote({ params }: { params: { id: string } }) {
+  // Obtencion de la data de la nota
+  const [data, setData] = useState<{
+    id: string;
+    title: string;
+    description: string;
+    content: string;
+  } | null>(null);
+  const [content, setContent] = useState<string>("");
 
-  noStore();
-  
-  const data = await prisma.note.findUnique({
-    where: {
-      id: noteId,
-      userId,
-    },
-    select: {
-        title: true,
-        description: true,
-        id: true,
+  // useEffect que se activa al cargar la pagina
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const noteData = await getDataHandler({ noteId: params.id });
+        //localStorage.setItem("content", noteData?.content || "");
+        /* console.log(noteData); */
+        
+        localStorage.setItem("content", noteData?.content || "");
+        setData(noteData);
+        setContent(noteData?.content || "");
+
+      } catch (error) {
+        console.error("Error fetching note data:", error);
+      }
     }
-  });
 
-  return data;
-}
+    fetchData();
+  }, [params.id]);
 
-export default async function DynamicNote({params}: {params: {id: string}}) {
-    const { getUser } = getKindeServerSession();
-    const user = await getUser();
-
-    const data = await getData({userId: user?.id as string, noteId: params.id});
-
-    // Esta función es para enviar la información al servidor, Se actualiza la nota
-    async function postData(formData: FormData) {
-        'use server'
-
-        if (!user) {
-            throw new Error('Not authorized')
-        }
-
-        const title = formData.get('title') as string
-        const description = formData.get('description') as string
-
-        await prisma.note.update({
-            where: {
-                id: data?.id,
-                userId: user?.id,
-            },
-            data: {
-                title,
-                description,
-            }
-        })
-
-        // Esto es para que se actualice la página
-        revalidatePath('/dashboard')
-
-        return redirect('/dashboard')
+  async function handleSubmit(formData: FormData) {
+    try {
+      await updateDatahandler(formData, data?.id as string, content);
+    } catch (error) {
+      console.error(error);
     }
+  }
+
+  const handleContentChange = (newContent: string) => {
+    setContent(newContent);
+  };
+
+  if (!data) {
+    return <div className="flex items-center justify-center min-h-[80vh]">
+        <Loader2 className="w-10 h-10 animate-spin" />
+    </div>;
+  }
 
   return (
     <Card>
-      <form action={postData}>
+      <form action={handleSubmit}>
         <CardHeader>
           <CardTitle>Edit Note</CardTitle>
           <CardDescription>
@@ -89,7 +92,7 @@ export default async function DynamicNote({params}: {params: {id: string}}) {
               type="text"
               name="title"
               placeholder="Title for your note"
-                defaultValue={data?.title}
+              defaultValue={data?.title}
             />
           </div>
 
@@ -98,7 +101,14 @@ export default async function DynamicNote({params}: {params: {id: string}}) {
             <Textarea
               name="description"
               placeholder="Describe your note as you want"
-                defaultValue={data?.description}
+              defaultValue={data?.description}
+            />
+          </div>
+          <div className="flex flex-col gap-y-2">
+            <Label>Content</Label>
+            <NotePicker
+              info={data?.content || ""}
+              onContentChange={handleContentChange}
             />
           </div>
         </CardContent>

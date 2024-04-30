@@ -89,13 +89,13 @@ export default async function DashboardLayout({
   })
 
   return (
-    <div className="flex flex-col space-y-6 mt-10">
+    <div className="flex flex-col space-y-6">
       {/* con esta clase md:grid-cols-[200px_1fr] le decimos que en pantallas medianas se muestre el aside y el main en columnas, el aside con un ancho de 200px y el main con el resto del espacio disponible */}
-      <div className="container grid flex-1 gap-12 md:grid-cols-[200px_1fr]">
-        <aside className="hidden w-[200px] flex-col md:flex">
+      <div className="w-full max-w-7xl px-2 md:px-6 py-1 md:py-3 grid flex-1 gap-8 md:grid-cols-[200px_1fr] mx-auto">
+        <aside className="hidden w-[200px] flex-col md:flex  pt-5 md:pt-10">
           <DashboardNav />
         </aside>
-        <main>{children}</main>
+        <main className="max-h-[87vh] overflow-y-auto  pt-5 px-1 md:pt-10">{children}</main>
       </div>
     </div>
   );

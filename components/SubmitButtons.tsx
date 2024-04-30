@@ -66,12 +66,12 @@ export function TrashDelete() {
   return (
     <>
       {pending ? (
-        <Button disabled variant={"destructive"} size={"icon"}>
-          <Loader2 className=" w-4 h-4 animate-spin" />
-        </Button>
+        <Button disabled className="w-fit" variant={'destructive'}>
+        <Loader2 className="mr-2 w-4 h-4 animate-spin" /> Please Wait
+      </Button>
       ) : (
-        <Button variant={"destructive"} size={"icon"} type="submit">
-          <Trash className="w-4 h-4" />
+        <Button variant={"destructive"} type="submit">
+          Delete
         </Button>
       )}
     </>

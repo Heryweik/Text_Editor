@@ -1,80 +1,88 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import prisma from "@/lib/db";
 import Link from "next/link";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { Edit, File, Plus, Trash } from "lucide-react";
+import { Edit, File, GridIcon, Loader2, Plus, Rows, Trash } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { TrashDelete } from "@/components/SubmitButtons";
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getUserHandler } from "@/action/GetUser";
+import { useEffect, useState } from "react";
+import { deleteNoteHandler } from "@/action/DeleteNote";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { DialogClose } from "@radix-ui/react-dialog";
 
 // Esta funcion es para obtener todas las notas del usuario
-async function getData(userId: string) {
-  // Sirve para que no se cachee la función, esto ya que se necesita que se ejecute en el servidor
-  noStore();
+// Aqui iba la funcion getData para obtener el usuario
 
-  /* const data = await prisma.note.findMany({
-    where: {
-      userId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  }); */
-
-  // Se cambia la forma de obtener los datos, ahora se obtiene el estado de la subscripcion y sus notas
-  const data = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      Notes: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-      Subscription: {
-        select: {
-          status: true,
-        },
-      },
-    },
-  });
-
-  return data;
-}
-
-export default async function DashboardPage() {
-  const { getUser } = getKindeServerSession();
+export default function DashboardPage() {
+  /* const { getUser } = getKindeServerSession();
   const user = await getUser();
 
   // Notas del usuario
-  const data = await getData(user?.id as string);
+  const data = await getData(user?.id as string); */
 
   // Esta función es para enviar la información al servidor, Se elimina la nota
-  async function deleteNote(formData: FormData) {
-    "use server";
 
-    if (!user) {
-      throw new Error("Not authorized");
+  // Se obtiene el usuario
+
+  const [data, setData] = useState<{
+    Subscription: {
+      status: string;
+    } | null;
+    Notes: {
+      id: string;
+      title: string;
+      description: string;
+      content: string;
+      createdAt: Date;
+      updatedAt: Date;
+      userId: string | null;
+    }[];
+  } | null>(null);
+
+  // useEffect que se activa al cargar la pagina y escucha el estado de data
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const userData = await getUserHandler();
+        //localStorage.setItem("content", userData?.content || "");
+        /* console.log(userData); */
+        setData(userData);
+      } catch (error) {
+        console.error("Error fetching note data:", error);
+      }
     }
 
-    // Se obtiene el id de la nota de un input que no se ve en el formulario
-    // Se obtiene asi ya que no se puede pasar directamente el id de la nota extraido de la data
-    const noteId = formData.get("noteId") as string;
+    fetchData();
+  }, []);
 
-    await prisma.note.delete({
-      where: {
-        id: noteId,
-        userId: user?.id,
-      },
-    });
-
-    // Esto es porque al borrar la nota siempre queda en cache por lo que se sigue viendo en la UI, con esto se actualiza la página
-    revalidatePath("/dashboard");
+  // Eliminar nota
+  async function deleteNote(noteId: string) {
+    try {
+      await deleteNoteHandler(noteId);
+      // Quiero que se actualice la página
+      // Funciona pero no es lo mejor
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
-    <div className="grid items-start gap-y-8">
+    <div className="grid items-start gap-y-2 md:gap-y-4">
       <div className="flex items-center justify-between gap-2">
         <div className="grid gap-1">
           <h1 className="text-3xl md:text-4xl font-bold">Your Notes</h1>
@@ -149,40 +157,165 @@ export default async function DashboardPage() {
           )}
         </div>
       ) : (
-        <div className="flex flex-col gap-y-4">
-          {data?.Notes.map((note) => (
-            <Card
-              key={note.id}
-              className="flex items-center justify-between p-4"
+        <Tabs defaultValue="table">
+          <div className="flex justify-between items-center">
+            <TabsList className="mb-2">
+              <TabsTrigger value="table" className="flex gap-2 items-center">
+                <Rows />
+                Table
+              </TabsTrigger>
+              <TabsTrigger value="grid" className="flex gap-2 items-center">
+                <GridIcon />
+                Grid
+              </TabsTrigger>
+            </TabsList>
+
+            <span>Notes: {data?.Notes.length}</span>
+          </div>
+
+          {!data && (
+            <div className="flex items-center justify-center min-h-[50vh]">
+              <Loader2 className="w-10 h-10 animate-spin" />
+            </div>
+          )}
+
+          <TabsContent value="grid">
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 0: 1, 750: 2, 1024: 3 }}
             >
-              <div>
-                <h2 className="font-semibold text-xl text-primary">
-                  {note.title}
-                </h2>
-                {/* Esta es una forma de mostrar la fecha de creación de la nota, son parametros de la función Intl.DateTimeFormat */}
-                <p>
-                  {new Intl.DateTimeFormat("en-US", {
-                    dateStyle: "full",
-                    timeStyle: "short",
-                  }).format(new Date(note.createdAt))}
-                </p>
-              </div>
+              <Masonry gutter="20px">
+                {data?.Notes.map((note) => (
+                  <div
+                    key={note.id}
+                    className="group w-full"
+                    /* style={{color: colors[index % colors.length]}} */
+                  >
+                    <Link
+                      href={`/dashboard/new/${note.id}`}
+                      className="w-[80%]"
+                    >
+                      <div
+                        /* style={{background: colors[index % colors.length] }} */ className="px-3 py-2 truncate border border-secondary rounded-tl-md rounded-tr-md  hover:bg-secondary/60"
+                      >
+                        <h2 className="font-semibold text-lg text-primary truncate">
+                          {note.title}
+                        </h2>
+                        <p className="text-xs flex justify-end">
+                          {new Intl.DateTimeFormat("en-US", {
+                            dateStyle: "full",
+                            timeStyle: "short",
+                          }).format(new Date(note.createdAt))}
+                        </p>
+                      </div>
+                    </Link>
+                    {/* Este div sirve para mostrar el contenido de la nota */}
+                    <div className="relative">
+                      <div
+                        className="ProseMirror whitespace-pre-line border border-secondary px-6 py-4 rounded-bl-md rounded-br-md text-sm overflow-auto"
+                        dangerouslySetInnerHTML={{ __html: note.content }}
+                      />
 
-              <div className="flex gap-x-4">
-                <Link href={`/dashboard/new/${note.id}`}>
-                  <Button variant={"outline"} size={"icon"}>
-                    <Edit className="w-4 h-4" />
-                  </Button>
-                </Link>
+                      <div className=" gap-x-2 absolute bottom-1 right-1 hidden group-hover:flex">
+                        <Link href={`/dashboard/new/${note.id}`}>
+                          <Button variant={"outline"} size={"icon"}>
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                        </Link>
 
-                <form action={deleteNote}>
-                  <input type="hidden" name="noteId" value={note.id} />
-                  <TrashDelete />
-                </form>
-              </div>
-            </Card>
-          ))}
-        </div>
+                        {/* <form action={() => deleteNote(note.id)}>
+                          <TrashDelete />
+                        </form> */}
+
+                        <Dialog>
+                          <DialogTrigger>
+                            <Button variant={"destructive"} size={"icon"}>
+                              <Trash className="w-4 h-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Delete this note?</DialogTitle>
+                              <DialogDescription>
+                                This action cannot be undone. This will
+                                permanently delete this note from our servers.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                              <form action={() => deleteNote(note.id)}>
+                                <TrashDelete />
+                              </form>
+                              <DialogClose>
+                                <Button variant={"outline"}>Cancel</Button>
+                              </DialogClose>
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </Masonry>
+            </ResponsiveMasonry>
+          </TabsContent>
+          <TabsContent value="table">
+            <div className="flex flex-col gap-y-4">
+              {data?.Notes.map((note) => (
+                <Card
+                  key={note.id}
+                  className="flex items-center justify-between p-4 hover:bg-secondary/60 gap-x-2"
+                >
+                  <div>
+                    <Link href={`/dashboard/new/${note.id}`}>
+                      <h2 className="font-semibold text-lg text-primary ">
+                        {note.title}
+                      </h2>
+                    </Link>
+                    {/* Esta es una forma de mostrar la fecha de creación de la nota, son parametros de la función Intl.DateTimeFormat */}
+                    <p className="text-sm">
+                      {new Intl.DateTimeFormat("en-US", {
+                        dateStyle: "full",
+                        timeStyle: "short",
+                      }).format(new Date(note.createdAt))}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-x-4">
+                    <Link href={`/dashboard/new/${note.id}`}>
+                      <Button variant={"outline"} size={"icon"}>
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                    </Link>
+
+                    <Dialog>
+                      <DialogTrigger>
+                        <Button variant={"destructive"} size={"icon"}>
+                          <Trash className="w-4 h-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Delete this note?</DialogTitle>
+                          <DialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete this note from our servers.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <form action={() => deleteNote(note.id)}>
+                            <TrashDelete />
+                          </form>
+                          <DialogClose>
+                            <Button variant={"outline"}>Cancel</Button>
+                          </DialogClose>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </TabsContent>
+        </Tabs>
       )}
     </div>
   );

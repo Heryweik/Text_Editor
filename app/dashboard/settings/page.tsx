@@ -24,7 +24,6 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
 async function getData(userId: string) {
-
   // Sirve para que no se cachee la función, esto ya que se necesita que se ejecute en el servidor
   noStore();
 
@@ -75,8 +74,8 @@ export default async function SettingPage() {
   }
 
   return (
-    <div className="grid items-start gap-8">
-      <div className="flex items-center justify-between px-2">
+    <div className="grid items-start gap-8 ">
+      <div className="flex items-center justify-between">
         <div className="grid gap-1">
           <h1 className="text-3xl md:text-4xl font-bold">Settings</h1>
           <p className="text-lg text-muted-foreground">Your Profile Settings</p>
@@ -125,13 +124,23 @@ export default async function SettingPage() {
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel>Color</SelectLabel>
-                      <SelectItem value="theme-green">Green</SelectItem>
+                      <SelectItem value="theme-green">
+                        <div className="flex gap-2">
+                          <div className="rounded-full w-5 h-5" style={{background: 'hsl(142.1 70.6% 45.3%)'}}></div>
+                          Green
+                        </div>
+                      </SelectItem>
                       <SelectItem value="theme-blue">Blue</SelectItem>
                       <SelectItem value="theme-violet">Violet</SelectItem>
                       <SelectItem value="theme-yellow">Yellow</SelectItem>
                       <SelectItem value="theme-orange">Orange</SelectItem>
                       <SelectItem value="theme-red">Red</SelectItem>
                       <SelectItem value="theme-rose">Rose</SelectItem>
+                      <SelectItem value="theme-neutral">Neutral</SelectItem>
+                      <SelectItem value="theme-gray">Gray</SelectItem>
+                      <SelectItem value="theme-stone">Stone</SelectItem>
+                      <SelectItem value="theme-slate">Slate</SelectItem>
+                      <SelectItem value="theme-zinc">Zink</SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>

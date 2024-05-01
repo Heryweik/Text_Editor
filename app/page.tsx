@@ -20,7 +20,7 @@ export default async function Home() {
   }
 
   return (
-    <section className="flex items-center justify-center bg-background h-[90vh]">
+    <section className="flex items-center justify-center bg-background h-[100vh] ">
       <div className="relative items-center w-full px-5 py-12 mx-auto lg:px-16 max-w-7xl md:px-12">
         <div className="max-w-3xl mx-auto text-center">
           <div>

@@ -82,7 +82,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="grid items-start gap-y-2 md:gap-y-4">
+    <div className="grid items-start gap-y-2 md:gap-y-4 ">
       <div className="flex items-center justify-between gap-2">
         <div className="grid gap-1">
           <h1 className="text-3xl md:text-4xl font-bold">Your Notes</h1>
@@ -133,7 +133,7 @@ export default function DashboardPage() {
       {/* {data.length < 1 ? ( */}
       {/* Cambia la forma de obtener el tamanio, ya que ahora se obtiene un arreglo con las notas */}
       {data?.Notes.length === 0 ? (
-        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-md border border-dashed p-8 text-center animate-in fade-in-50">
+        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-md border border-dashed p-5 text-center animate-in fade-in-50">
           <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
             <File className="w-10 h-10 text-primary" />
           </div>
@@ -159,7 +159,7 @@ export default function DashboardPage() {
       ) : (
         <Tabs defaultValue="table">
           <div className="flex justify-between items-center">
-            <TabsList className="mb-2">
+            <TabsList className="mb-3">
               <TabsTrigger value="table" className="flex gap-2 items-center">
                 <Rows />
                 Table
@@ -195,12 +195,12 @@ export default function DashboardPage() {
                       className="w-[80%]"
                     >
                       <div
-                        /* style={{background: colors[index % colors.length] }} */ className="px-3 py-2 truncate border border-secondary rounded-tl-md rounded-tr-md  hover:bg-secondary/60"
+                        /* style={{background: colors[index % colors.length] }} */ className="px-3 py-2 truncate border border-secondary rounded-tl-md rounded-tr-md  hover:bg-secondary/50 bg-secondary"
                       >
-                        <h2 className="font-semibold text-lg text-primary truncate">
+                        <h2 className="font-semibold text-lg  truncate">
                           {note.title}
                         </h2>
-                        <p className="text-xs flex justify-end">
+                        <p className="text-xs flex justify-end text-muted-foreground">
                           {new Intl.DateTimeFormat("en-US", {
                             dateStyle: "full",
                             timeStyle: "short",
@@ -240,12 +240,19 @@ export default function DashboardPage() {
                                 permanently delete this note from our servers.
                               </DialogDescription>
                             </DialogHeader>
-                            <DialogFooter>
-                              <form action={() => deleteNote(note.id)}>
-                                <TrashDelete />
-                              </form>
-                              <DialogClose>
-                                <Button variant={"outline"}>Cancel</Button>
+                            <DialogFooter className="flex gap-2">
+                              <div className="order-2 sm:order-1">
+                                <form
+                                  action={() => deleteNote(note.id)}
+                                  className=""
+                                >
+                                  <TrashDelete />
+                                </form>
+                              </div>
+                              <DialogClose className="w-full sm:w-auto order-1 sm:order-2">
+                                <Button variant={"outline"} className="w-full">
+                                  Cancel
+                                </Button>
                               </DialogClose>
                             </DialogFooter>
                           </DialogContent>
@@ -262,16 +269,16 @@ export default function DashboardPage() {
               {data?.Notes.map((note) => (
                 <Card
                   key={note.id}
-                  className="flex items-center justify-between p-4 hover:bg-secondary/60 gap-x-2"
+                  className="flex items-center justify-between p-4 hover:bg-secondary/50 bg-secondary gap-x-2"
                 >
                   <div>
                     <Link href={`/dashboard/new/${note.id}`}>
-                      <h2 className="font-semibold text-lg text-primary ">
+                      <h2 className="font-semibold text-lg ">
                         {note.title}
                       </h2>
                     </Link>
                     {/* Esta es una forma de mostrar la fecha de creación de la nota, son parametros de la función Intl.DateTimeFormat */}
-                    <p className="text-sm">
+                    <p className="text-xs text-muted-foreground">
                       {new Intl.DateTimeFormat("en-US", {
                         dateStyle: "full",
                         timeStyle: "short",
@@ -300,12 +307,19 @@ export default function DashboardPage() {
                             delete this note from our servers.
                           </DialogDescription>
                         </DialogHeader>
-                        <DialogFooter>
-                          <form action={() => deleteNote(note.id)}>
-                            <TrashDelete />
-                          </form>
-                          <DialogClose>
-                            <Button variant={"outline"}>Cancel</Button>
+                        <DialogFooter className="flex gap-2">
+                          <div className="order-2 sm:order-1">
+                            <form
+                              action={() => deleteNote(note.id)}
+                              className=""
+                            >
+                              <TrashDelete />
+                            </form>
+                          </div>
+                          <DialogClose className="w-full sm:w-auto order-1 sm:order-2">
+                            <Button variant={"outline"} className="w-full">
+                              Cancel
+                            </Button>
                           </DialogClose>
                         </DialogFooter>
                       </DialogContent>

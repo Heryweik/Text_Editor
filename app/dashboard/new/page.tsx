@@ -79,7 +79,7 @@ export default function NewNotePage() {
   }
 
   return (
-    <Card>
+    <Card className="">
       <form action={handleSubmit}>
         <CardHeader>
           <CardTitle>New Note</CardTitle>

@@ -7,7 +7,7 @@ import React from 'react'
 
 export default function CancelledPage() {
   return (
-    <div className='w-full min-h-[80vh] flex items-center justify-center'>
+    <div className='w-full min-h-[80vh] flex items-center justify-center mt-[10vh]'>
         <Card className='w-[350px]'>
             <div className='p-6'>
                 <div className='w-full flex justify-center'>

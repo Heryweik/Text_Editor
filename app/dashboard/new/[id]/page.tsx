@@ -25,6 +25,7 @@ import { postDataHandler } from "@/action/CreateNote";
 import { getDataHandler } from "@/action/GetNote";
 import { updateDatahandler } from "@/action/UpdateNote";
 import { Loader2 } from "lucide-react";
+import { toast } from "@/components/ui/use-toast";
 
 export default function DynamicNote({ params }: { params: { id: string } }) {
   // Obtencion de la data de la nota
@@ -59,6 +60,11 @@ export default function DynamicNote({ params }: { params: { id: string } }) {
   async function handleSubmit(formData: FormData) {
     try {
       await updateDatahandler(formData, data?.id as string, content);
+      toast({
+        variant: "default",
+        title: "Note Updated",
+        description: "Your note has been updated successfully",
+      });
     } catch (error) {
       console.error(error);
     }
@@ -116,7 +122,7 @@ export default function DynamicNote({ params }: { params: { id: string } }) {
           <Button variant={"destructive"} asChild>
             <Link href="/dashboard">Cancel</Link>
           </Button>
-          <SubmitButtons />
+          <SubmitButtons handleSubmit={handleSubmit}/>
         </CardFooter>
       </form>
     </Card>

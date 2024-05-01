@@ -4,11 +4,11 @@ import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
 
-export async function getUserHandler() {
+export async function getUserLoginHandler() {
   // Sirve para que no se cachee la función, esto ya que se necesita que se ejecute en el servidor
   noStore();
 
-  const { getUser } = getKindeServerSession();
+  const { getUser, isAuthenticated } = getKindeServerSession();
     const user = await getUser();
 
   /* const data = await prisma.note.findMany({
@@ -26,20 +26,19 @@ export async function getUserHandler() {
       id: user?.id as string,
     },
     select: {
-      Notes: {
-        orderBy: {
-          createdAt: "desc",
-        },
-      },
-      Subscription: {
-        select: {
-          status: true,
-        },
-      },
+      name: true,
     },
   });
 
+  // Guardamos el nombre y demas informacion del usuario en una sola variable
+  const userData = {
+    name: data?.name as string,
+    email: user?.email as string,
+    image: user?.picture as string,
+    isAuthenticated: await isAuthenticated(),
+  }
 
+  revalidatePath("/", 'layout');
 
-  return data;
+  return userData;
 }

@@ -21,6 +21,7 @@ import { unstable_noStore as noStore } from "next/cache";
 import NotePicker from "@/components/tiptap/NotePicker";
 import { useEffect, useState } from "react";
 import { postDataHandler } from "@/action/CreateNote";
+import { toast } from "@/components/ui/use-toast";
 
 
 export default function NewNotePage() {
@@ -73,8 +74,19 @@ export default function NewNotePage() {
   async function handleSubmit(formData: FormData) {
     try {
       await postDataHandler(formData, content);
+      toast({
+        variant: "default",
+        title: "Note created",
+        description: "Your note has been created successfully",
+      });
     } catch (error) {
       console.error(error);
+      // Si hay un error, puedes mostrar una notificación de error aquí
+      /* toast({
+        variant: "destructive",
+        title: "Failed to create note",
+        description: "An error occurred while creating the note",
+      }); */
     }
   }
 
@@ -119,7 +131,7 @@ export default function NewNotePage() {
           <Button variant={"destructive"} asChild>
             <Link href="/dashboard">Cancel</Link>
           </Button>
-          <SubmitButtons />
+          <SubmitButtons handleSubmit={handleSubmit}/>
         </CardFooter>
       </form>
     </Card>

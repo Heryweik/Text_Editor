@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { unstable_noStore as noStore } from "next/cache";
+import { Toaster } from "@/components/ui/toaster";
 
 const outfit = Outfit({ subsets: ["latin"] });
 
@@ -66,6 +67,8 @@ export default async function RootLayout({
           data?.colorScheme ?? "theme-violet"
         } max-h-screen`}
       >
+        {/* Para que aparezcan alertas */}
+        <Toaster />
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

@@ -95,7 +95,7 @@ export default async function DashboardLayout({
         <aside className="hidden w-[200px] flex-col md:flex  pt-5 md:pt-10 border-r pr-5">
           <DashboardNav />
         </aside>
-        <main className="max-h-[87vh] overflow-y-auto  pt-5 md:pt-10 mt-[10vh]">{children}</main>
+        <main className="max-h-[90vh] overflow-y-auto  pt-5 md:pt-10 mt-[10vh]">{children}</main>
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { revalidatePath, unstable_noStore as noStore } from "next/cache";
@@ -102,6 +103,10 @@ export default async function SettingPage() {
                   placeholder="Your Name"
                   defaultValue={data?.name as string}
                 />
+
+                <p className="text-xs text-muted-foreground">
+                The new name will appear when you reload the website
+                </p>
               </div>
               <div className="space-y-1">
                 <Label>Your Email</Label>
@@ -126,21 +131,112 @@ export default async function SettingPage() {
                       <SelectLabel>Color</SelectLabel>
                       <SelectItem value="theme-green">
                         <div className="flex gap-2">
-                          <div className="rounded-full w-5 h-5" style={{background: 'hsl(142.1 70.6% 45.3%)'}}></div>
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(142.1 70.6% 45.3%)" }}
+                          ></div>
                           Green
                         </div>
                       </SelectItem>
-                      <SelectItem value="theme-blue">Blue</SelectItem>
-                      <SelectItem value="theme-violet">Violet</SelectItem>
-                      <SelectItem value="theme-yellow">Yellow</SelectItem>
-                      <SelectItem value="theme-orange">Orange</SelectItem>
-                      <SelectItem value="theme-red">Red</SelectItem>
-                      <SelectItem value="theme-rose">Rose</SelectItem>
-                      <SelectItem value="theme-neutral">Neutral</SelectItem>
-                      <SelectItem value="theme-gray">Gray</SelectItem>
-                      <SelectItem value="theme-stone">Stone</SelectItem>
-                      <SelectItem value="theme-slate">Slate</SelectItem>
-                      <SelectItem value="theme-zinc">Zink</SelectItem>
+                      <SelectItem value="theme-blue">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(217.2 91.2% 59.8%)" }}
+                          ></div>
+                          Blue
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-violet">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(263.4 70% 50.4%)" }}
+                          ></div>
+                          Violet
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-yellow">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(47.9 95.8% 53.1%)" }}
+                          ></div>
+                          Yellow
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-orange">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(20.5 90.2% 48.2%)" }}
+                          ></div>
+                          Orange
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-rose">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(346.8 77.2% 49.8%)" }}
+                          ></div>
+                          Rose
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-red">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(0 72.2% 50.6%)" }}
+                          ></div>
+                          Red
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-gray">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(220.9 39.3% 11%)" }}
+                          ></div>
+                          Gray
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-slate">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(222.2 47.4% 11.2%)" }}
+                          ></div>
+                          Slate
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-stone">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(24 9.8% 10%)" }}
+                          ></div>
+                          Stone
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-neutral">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(0 0% 9%)" }}
+                          ></div>
+                          Neutral
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="theme-zinc">
+                        <div className="flex gap-2">
+                          <div
+                            className="rounded-full w-5 h-5"
+                            style={{ background: "hsl(240 5.9% 10%)" }}
+                          ></div>
+                          Zinc
+                        </div>
+                      </SelectItem>
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -149,7 +245,7 @@ export default async function SettingPage() {
           </CardContent>
 
           <CardFooter>
-            <SubmitButtons />
+            <SubmitButtons/>
           </CardFooter>
         </form>
       </Card>

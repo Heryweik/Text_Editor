@@ -23,6 +23,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DialogClose } from "@radix-ui/react-dialog";
+import { toast } from "@/components/ui/use-toast";
 
 // Esta funcion es para obtener todas las notas del usuario
 // Aqui iba la funcion getData para obtener el usuario
@@ -73,6 +74,11 @@ export default function DashboardPage() {
   async function deleteNote(noteId: string) {
     try {
       await deleteNoteHandler(noteId);
+      toast({
+        variant: "default",
+        title: "Note deleted",
+        description: "Your note has been deleted successfully",
+      });
       // Quiero que se actualice la página
       // Funciona pero no es lo mejor
       window.location.reload();
@@ -246,7 +252,7 @@ export default function DashboardPage() {
                                   action={() => deleteNote(note.id)}
                                   className=""
                                 >
-                                  <TrashDelete />
+                                  <TrashDelete deleteNote={deleteNote} />
                                 </form>
                               </div>
                               <DialogClose className="w-full sm:w-auto order-1 sm:order-2">
@@ -313,7 +319,7 @@ export default function DashboardPage() {
                               action={() => deleteNote(note.id)}
                               className=""
                             >
-                              <TrashDelete />
+                              <TrashDelete deleteNote={deleteNote} />
                             </form>
                           </div>
                           <DialogClose className="w-full sm:w-auto order-1 sm:order-2">

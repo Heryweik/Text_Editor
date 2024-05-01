@@ -65,8 +65,8 @@ export default function UserNav({
         <DropdownMenuLabel>
           <div className="flex flex-col space-y-1">
             {/* leading-none sirve para que el texto no tenga espacio entre lineas */}
-            <p className="text-sm font-medium leading-none">{name}</p>
-            <p className="text-sm text-muted-foreground leading-none">
+            <p className="text-sm font-medium leading-none truncate">{name}</p>
+            <p className="text-sm text-muted-foreground leading-none truncate">
               {email}
             </p>
           </div>

@@ -20,9 +20,15 @@ export default async function Home() {
   }
 
   return (
-    <section className="flex items-center justify-center bg-background h-[100vh] ">
-      <div className="relative items-center w-full px-5 py-12 mx-auto lg:px-16 max-w-7xl md:px-12">
+    <section className="flex items-center justify-center bg-background h-[100vh] relative isolate">
+      
+      {/* <div className="absolute inset-0 h-screen w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div> */}
+      {/* Esto es el fondo */}
+      <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_80%_50%_at_50%_0%,#000_70%,transparent_110%)]"></div>
+
+      <div className="relative items-center w-full px-5 py-12 mx-auto lg:px-16 max-w-7xl md:px-12 ">
         <div className="max-w-3xl mx-auto text-center">
+        
           <div>
             <span className="w-auto px-6 py-3 rounded-full bg-secondary">
               <span className="text-sm font-medium text-primary">
@@ -36,7 +42,7 @@ export default async function Home() {
               </span>
             </span> */}
 
-            <h1 className="mt-8 text-3xl font-extrabold tracking-tight lg:text-6xl">
+            <h1 className="mt-8 text-5xl font-extrabold tracking-tight lg:text-6xl">
               Create Notes with easy
             </h1>
             <p className="max-w-xl mx-auto mt-8 text-base lg:text-xl text-secondary-foreground">

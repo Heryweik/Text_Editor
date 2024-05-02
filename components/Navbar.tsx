@@ -15,6 +15,7 @@ import { getUserLoginHandler } from "@/action/GetUserLogin";
 import { Suspense, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export default function Navbar() {
 
@@ -55,8 +56,8 @@ export default function Navbar() {
     fetchData();
   }, []);
 
-  /* // Si no hay datos, se muestra el navbar sin el usuario, deberia de ir un Skeleton
-  if (!data) {
+  // Si no hay datos y la ruta es diferente a "/", se muestra el navbar sin el usuario, deberia de ir un Skeleton
+  if (!data && pathname !== "/") {
     return (
       <nav className="border-b bg-background h-[10vh] flex items-center fixed w-full">
         <div className=" w-full max-w-7xl px-2 md:px-6 py-1 md:py-3 flex items-center justify-between gap-x-2 mx-auto">
@@ -75,7 +76,7 @@ export default function Navbar() {
         </div>
       </nav>
     )
-  } */
+  }
 
   return (
     <nav className={cn(`border-b z-30  h-[10vh] flex items-center fixed w-full`,
@@ -83,6 +84,7 @@ export default function Navbar() {
   )}>
       <div className=" w-full max-w-7xl px-2 md:px-6 py-1 md:py-3 flex items-center justify-between gap-x-2 mx-auto">
         <Link href="/">
+          {/* <Image src="/notes.svg" alt="icon" width={40} height={40} /> */}
           <h1 className="font-bold text-3xl hidden sm:block">
             Text<span className="text-primary">Editor</span>
           </h1>

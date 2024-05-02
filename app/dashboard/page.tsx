@@ -87,6 +87,9 @@ export default function DashboardPage() {
     }
   }
 
+  // Variable que lee localStorage para saber si las notas se muestra en forma de tabla o en forma de grid
+  const view = localStorage.getItem("view");
+
   return (
     <div className="grid items-start gap-y-2 md:gap-y-4 ">
       <div className="flex items-center justify-between gap-2">
@@ -148,8 +151,7 @@ export default function DashboardPage() {
             You dont have any notes created
           </h2>
           <p className="mb-8 mt-2 text-center text-sm leading-6 text-muted-foreground max-w-sm mx-auto">
-            You currently dont have any notes. Please create some so that you
-            can see them right here.
+            You currently dont have any notes. Please create some so that you can see them right here.
           </p>
 
           {data?.Subscription?.status === "active" ? (
@@ -157,20 +159,33 @@ export default function DashboardPage() {
               <Link href="/dashboard/new">Create a new Note</Link>
             </Button>
           ) : (
-            <Button asChild>
+            <Button asChild
+            onClick={() => {
+              toast({
+                variant: "default",
+                title: "You need a subscription",
+                description: "You need to have an active subscription to create a new note",
+              })
+            }}
+            >
               <Link href="/dashboard/billing">Create a new Note</Link>
             </Button>
           )}
         </div>
       ) : (
-        <Tabs defaultValue="table">
+        <Tabs defaultValue={view || 'table'}>
+          {/* Tab tiene un valor por defecto que es el valor de la variable view, si no hay valor, se muestra en forma de tabla */}
           <div className="flex justify-between items-center">
             <TabsList className="mb-3">
-              <TabsTrigger value="table" className="flex gap-2 items-center">
+              <TabsTrigger value="table" className="flex gap-2 items-center" onClick={() => {
+                localStorage.setItem("view", "table");
+              }}>
                 <Rows />
                 Table
               </TabsTrigger>
-              <TabsTrigger value="grid" className="flex gap-2 items-center">
+              <TabsTrigger value="grid" className="flex gap-2 items-center" onClick={() => {
+                localStorage.setItem("view", "grid");
+              }}>
                 <GridIcon />
                 Grid
               </TabsTrigger>

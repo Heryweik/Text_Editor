@@ -2,17 +2,21 @@ import { type Editor } from "@tiptap/react";
 import {
   Bold,
   Code,
+  Expand,
   Heading1,
   Heading2,
   Italic,
   List,
   ListOrdered,
+  Minimize,
   Quote,
   Redo,
   Strikethrough,
   Underline,
   Undo,
 } from "lucide-react";
+import { Button } from "../ui/button";
+import { useState } from "react";
 
 type Props = {
   editor: Editor | null;
@@ -20,9 +24,27 @@ type Props = {
 };
 
 export default function Toolbar({ editor, content }: Props) {
+  
+  
+  /* // Obtenemos de localStorage si el editor de texto esta expandido o no
+  const local = localStorage.getItem("expand");
+
+  //Estado para saber si el editor de texto esta expandido o no, al dar click sobre el boton va cambiar el estado
+  const [expand, setExpand] = useState<boolean>(local === "true" ? true : false);
+
+  const handleChange = () => {
+    setExpand(!expand);
+    if (expand === true) {
+      localStorage.setItem("expand", "false");
+    } else {
+      localStorage.setItem("expand", "true");
+    }
+  } */
+
   if (!editor) {
     return null;
   }
+
 
   return (
     <div className="px-4 py-3 rounded-tl-md rounded-tr-md flex justify-between items-center gap-5 w-full flex-wrap border border-input bg-background">
@@ -37,7 +59,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("bold")
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -52,7 +74,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("italic")
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -67,7 +89,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("underline")
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -82,7 +104,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("strike")
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -97,7 +119,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("heading", { level: 1 })
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -105,19 +127,19 @@ export default function Toolbar({ editor, content }: Props) {
         </button> */}
 
         {/* h2 heading Button */}
-        {/* <button
+        <button
           onClick={(e) => {
             e.preventDefault();
             editor.chain().focus().toggleHeading({ level: 2 }).run();
           }}
           className={
             editor.isActive("heading", { level: 2 })
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
           <Heading2 className="w-5 h-5" />
-        </button> */}
+        </button>
 
         {/* unordered bullet list Button */}
         <button
@@ -127,7 +149,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("bulletList")
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -142,7 +164,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("orderedList")
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -157,7 +179,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("blockquote")
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -172,7 +194,7 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("code")
-              ? "bg-primary/70 dark:bg-primary p-1 rounded-lg"
+              ? "bg-primary/50 p-1 rounded-lg"
               : "text-primary"
           }
         >
@@ -187,8 +209,8 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("undo")
-              ? "bg-primary/70 dark:bg-primary p-2 rounded-lg"
-              : "text-primary hover:bg-primary/70 hover:dark:bg-primary hover:text-white hover:rounded-lg p-1"
+              ? "bg-primary/50 p-2 rounded-lg"
+              : "text-primary hover:bg-primary/50 hover:text-white hover:rounded-lg p-1"
           }
         >
           <Undo className="w-5 h-5" />
@@ -202,22 +224,28 @@ export default function Toolbar({ editor, content }: Props) {
           }}
           className={
             editor.isActive("redo")
-              ? "bg-primary/70 dark:bg-primary p-2 rounded-lg"
-              : "text-primary hover:bg-primary/70 hover:dark:bg-primary hover:text-white hover:rounded-lg p-1"
+              ? "bg-primary/50 p-2 rounded-lg"
+              : "text-primary hover:bg-primary/50 hover:text-white hover:rounded-lg p-1"
           }
         >
           <Redo className="w-5 h-5" />
         </button>
       </div>
 
-      {/* {content && (
-        <button
-          type="submit"
-          className="px-4 bg-sky-700 text-white py-2 rounded-md"
-        >
-          Add
-        </button>
-      )} */}
+      {/* <Button
+      type="button"
+        variant={"outline"}
+        size={"icon"}
+        onClick={() => {
+          handleChange();
+        }}
+      >
+        {expand ? (
+          <Minimize className="w-5 h-5" />
+        ) : (
+          <Expand className="w-5 h-5" />
+        )}
+      </Button> */}
     </div>
   );
 }

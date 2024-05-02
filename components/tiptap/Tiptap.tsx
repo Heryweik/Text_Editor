@@ -4,6 +4,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./Toolbar";
 import Underline from "@tiptap/extension-underline";
+import Heading from "@tiptap/extension-heading";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -27,7 +28,14 @@ const Tiptap = ({ onChange, content }: any) => {
   const editor = useEditor({
     // Aqui van las extensiones que se quieran usar
     // Underline es una extension que no viene por defecto
-    extensions: [StarterKit, Underline],
+    extensions: [StarterKit, Underline,
+      Heading.configure({
+        HTMLAttributes: {
+          class: "text-xl font-bold",
+        },
+        levels: [2],
+      }),
+    ],
     editorProps: {
       attributes: {
         class:

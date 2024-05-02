@@ -59,7 +59,7 @@ export default function Navbar() {
   // Si no hay datos y la ruta es diferente a "/", se muestra el navbar sin el usuario, deberia de ir un Skeleton
   if (!data && pathname !== "/") {
     return (
-      <nav className="border-b bg-background h-[10vh] flex items-center fixed w-full">
+      <nav className="border-b z-30 bg-background h-[10vh] flex items-center fixed w-full">
         <div className=" w-full max-w-7xl px-2 md:px-6 py-1 md:py-3 flex items-center justify-between gap-x-2 mx-auto">
           <Link href="/">
             <h1 className="font-bold text-3xl hidden sm:block">

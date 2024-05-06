@@ -163,7 +163,7 @@ export default async function BillingPage() {
           </div>
           <div className="flex">
           <div className="flex flex-1 flex-col justify-between  bg-secondary rounded-lg m-1 px-6 py-3">
-          <p className="ml-3 text-base">MM/AA : 04/24</p>
+          <p className="ml-3 text-base">MM/AA : 05/24</p>
           </div>
           <div className="flex flex-1 flex-col justify-between  bg-secondary rounded-lg m-1 px-6 py-3">
           <p className="ml-3 text-base">CVC : 424</p>

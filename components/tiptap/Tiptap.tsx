@@ -39,7 +39,7 @@ const Tiptap = ({ onChange, content }: any) => {
     editorProps: {
       attributes: {
         class:
-          "flex flex-col px-4 py-3 justify-start border-b border-r border-l border-input bg-background text-sm items-start w-full gap-3 font-medium pt-4 rounded-bl-md rounded-br-md outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:rounded-md break-all max-h-[500px] overflow-y-auto",
+          "flex flex-col px-4 py-3 justify-start border-b border-r border-l border-input bg-background text-base items-start w-full gap-3 font-medium pt-4 rounded-bl-md rounded-br-md outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 focus-visible:rounded-md break-all max-h-[500px] overflow-y-auto",
           // break-all es para que los saltos de linea se hagan en cualquier parte de la palabra
       },
     },

@@ -65,7 +65,7 @@ export default async function RootLayout({
       <body
         className={`${outfit.className} ${
           data?.colorScheme ?? "theme-violet"
-        } max-h-screen`}
+        } max-h-svh`}
       >
         {/* Para que aparezcan alertas */}
         <Toaster />

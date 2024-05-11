@@ -89,7 +89,7 @@ export default async function DashboardLayout({
   })
 
   return (
-    <div className="flex flex-col space-y-6 min-h-screen">
+    <div className="flex flex-col space-y-6 min-h-svh">
       {/* con esta clase md:grid-cols-[200px_1fr] le decimos que en pantallas medianas se muestre el aside y el main en columnas, el aside con un ancho de 200px y el main con el resto del espacio disponible */}
       <div className="w-full max-w-7xl px-2 md:px-6 grid flex-1 gap-8  mx-auto  "> {/* md:grid-cols-[200px_1fr] */}
         <aside className="hidden w-[200px] flex-col md:flex  pt-5 md:pt-10 border-r pr-5 fixed h-full">

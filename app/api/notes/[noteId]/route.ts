@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-// No se usa
+// No se usaaaaaaaaaaaa
 
 export async function GET(
     req: Request,
